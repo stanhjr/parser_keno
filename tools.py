@@ -16,8 +16,8 @@ def parser_one_page(driver):
     page_list = []
 
     for div_ in reviews:
-        count += 1
         row_list = []
+        count += 1
         driver.execute_script("arguments[0].scrollIntoView(true);", div_)
 
         label = div_.find_element_by_class_name("new-accordion__text").text
@@ -25,20 +25,20 @@ def parser_one_page(driver):
         time.sleep(1)
 
         wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, 'new-ball__number')))
+
         list_ball = div_.find_elements(By.CLASS_NAME, 'new-ball__number')
         for ball in list_ball:
             try:
                 ball_text = ball.text
                 row_list.append(ball_text)
             except StaleElementReferenceException:
-                row_list.append('X')
-        page_list.append(row_list)
+                continue
+        if len(row_list) == 21:
+            page_list.append(row_list)
         if count == 20:
             break
 
-    time.sleep(2)
     driver.execute_script("arguments[0].scrollIntoView(true);", reviews[20])
-
     time.sleep(2)
 
     review = driver.find_elements(By.CLASS_NAME, 'new-accordion.new-accordion--result')
@@ -54,16 +54,11 @@ def parser_one_page(driver):
                 ball_text = ball.text
                 row_list.append(ball_text)
             except StaleElementReferenceException:
-                row_list.append('X')
+                continue
+        if len(row_list) == 21:
+            page_list.append(row_list)
 
     return page_list
-
-
-def refresh_page(driver):
-    action = ActionChains
-    action.send_keys(Keys.PAGE_UP)
-    driver.execute_script("window.scrollTo(0, 500)")
-
 
 
 def calendar_step(driver, wait):
@@ -94,11 +89,6 @@ def calendar_step(driver, wait):
         if int(date_selected.text) - int(pick.text) == 1:
             pick.click()
             break
-
-        # if int(date_selected.text) - int(pick.text) == 0 and pick not in date_out_of_calendar_list:
-        #     my_index = date_list.index(pick)
-        #     date_list[my_index - 1].click()
-        #     break
 
 
 def month_step(driver, wait):
@@ -143,8 +133,3 @@ def click_last_date_on_month(driver):
         if date.text == last_date:
             date.click()
             break
-
-
-
-
-
