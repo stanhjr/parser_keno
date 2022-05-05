@@ -10,8 +10,10 @@ driver = webdriver.Chrome("/usr/bin/chromedriver")
 
 driver.maximize_window()
 
+
 driver.get("https://tvbet.tv/demo/")
 wait = WebDriverWait(driver, 10)
+
 if __name__ == '__main__':
 
     wait.until(ec.presence_of_element_located((By.CLASS_NAME, "cookie-bar__close.js-close-cookie-bar"))).click()
